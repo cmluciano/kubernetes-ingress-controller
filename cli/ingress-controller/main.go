@@ -413,10 +413,24 @@ func main() {
 	cacheStores.Plugin = kongPluginInformer.GetStore()
 	informers = append(informers, kongPluginInformer)
 
-	kongClusterPluginInformer := kongInformerFactory.Configuration().V1().KongClusterPlugins().Informer()
-	kongClusterPluginInformer.AddEventHandler(reh)
-	cacheStores.ClusterPlugin = kongClusterPluginInformer.GetStore()
-	informers = append(informers, kongClusterPluginInformer)
+	// iterating through all our CRDs to find one seems like overkill, but it doesn't seem like there's
+	// a client function to check support for a single resource only. Alternatively we could try to infer this
+	// if cliConfig.WatchNamespace is set, since that precludes seeting any KongClusterPlugins
+	supportedKongResources, _ := kubeClient.Discovery().ServerResourcesForGroupVersion("configuration.konghq.com/v1")
+	hasKongClusterPlugin := false
+	for _, resource := range supportedKongResources.APIResources {
+		if resource.Kind == "KongClusterPlugin" {
+			hasKongClusterPlugin = true
+			break
+		}
+	}
+
+	if hasKongClusterPlugin {
+		kongClusterPluginInformer := kongInformerFactory.Configuration().V1().KongClusterPlugins().Informer()
+		kongClusterPluginInformer.AddEventHandler(reh)
+		cacheStores.ClusterPlugin = kongClusterPluginInformer.GetStore()
+		informers = append(informers, kongClusterPluginInformer)
+	}
 
 	kongConsumerInformer := kongInformerFactory.Configuration().V1().KongConsumers().Informer()
 	kongConsumerInformer.AddEventHandler(reh)
