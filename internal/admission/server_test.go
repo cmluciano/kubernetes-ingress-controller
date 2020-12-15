@@ -92,7 +92,7 @@ func TestValidationWebhook(t *testing.T) {
 							},
 							"object": {
 								"apiVersion": "configuration.konghq.com/v1",
-								"kind": "KongConsumer"
+								"kind": "ueuaeuauoeuueauoeueaeueouaueu"
 							},
 						"operation": "CREATE"
 						}
@@ -126,7 +126,7 @@ func TestValidationWebhook(t *testing.T) {
 							"oldObject": {
 								"apiVersion": "configuration.konghq.com/v1",
 								"kind": "KongConsumer",
-							"username":"bar"
+							"username":""
 							},
 						"operation": "UPDATE"
 						}
@@ -161,7 +161,7 @@ func TestValidationWebhook(t *testing.T) {
 							"oldObject": {
 								"apiVersion": "configuration.konghq.com/v1",
 								"kind": "KongConsumer",
-							"username":"foo"
+							"username":"bbbbbbbbbbbbb"
 							},
 						"operation": "UPDATE"
 						}
